@@ -1,4 +1,5 @@
 var path = require('path');
+var url = require('url');
 var shortid = require('shortid');
 var express = require('express');
 var app = express();
@@ -55,6 +56,10 @@ app.get('/:token', function(req, res) {
 				original_url: 1,
 				short_url: 1
 			}, function(err, data) {
+				if (url.parse(data.original_url).protocol === null) {
+					data.original_url = 'http://' + data.original_url;
+				}
+
 				res.redirect(data.original_url);
 			});
 
