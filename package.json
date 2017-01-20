@@ -1,0 +1,25 @@
+{
+  "name": "url-shortener",
+  "version": "1.0.0",
+  "description": "URL Shortener Microservice",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.14.0",
+    "mongodb": "^2.2.21",
+    "shortid": "^2.2.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intajay/url-shortener.git"
+  },
+  "author": "Ajay",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/intajay/url-shortener/issues"
+  },
+  "homepage": "https://github.com/intajay/url-shortener#readme"
+}
