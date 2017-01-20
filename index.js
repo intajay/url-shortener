@@ -41,6 +41,28 @@ app.get('/shorten', function(req, res) {
 	});
 });
 
+app.get('/:token', function(req, res) {
+	mongo.connect(uri, function(err, db) {
+		if (err) {
+			console.log('Unable to connect to Database');
+		} else {
+			var urls = db.collection('urls');
+
+			urls.findOne({
+				short_url: req.headers.host + '/' + req.params.token
+			}, {
+				_id: 0,
+				original_url: 1,
+				short_url: 1
+			}, function(err, data) {
+				res.redirect(data.original_url);
+			});
+
+			db.close();
+		}
+	});
+});
+
 app.listen(port, function() {
 	console.log('Server listening on Port ' + port);
 });
