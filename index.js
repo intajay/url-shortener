@@ -3,67 +3,59 @@ var url = require('url');
 var shortid = require('shortid');
 var express = require('express');
 var app = express();
-var mongo = require('mongodb').MongoClient;
+
+
+var mongoose = require('mongoose');
+
+var Schema = mongoose.Schema;
+var urlSchema = new Schema({
+	originalUrl: String,
+	shortUrl: String
+});
+var urlCollection = mongoose.model('urlCollection', urlSchema);
 
 var uri = process.env.MONGODB_URI;
+mongoose.connect(uri);
 var port = process.env.PORT || 3000;
-
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/', function(req, res) {
+	res.send('Root');
+})
+
 app.get('/shorten', function(req, res) {
 
-	var short_url = {
-		'original_url': req.query.url,
-		'short_url': req.headers.host + '/' + shortid.generate()
-	};
-
-	mongo.connect(uri, function(err, db) {
+	urlCollection.create({
+		'originalUrl': req.query.url,
+		'shortUrl': req.headers.host + '/' + shortid.generate()
+	}, function(err, urls) {
 		if (err) {
-			console.log('Unable to connect to Database');
+			res.status(500).send('Error');
 		} else {
-			var urls = db.collection('urls');
-
-			urls.insert(short_url, function(err, data) {
-				if (err) {
-					console.log('Unable to insert docs');
-					res.status(500).send();
-				} else {
-					console.log(short_url);
-					res.json({
-						'original_url': short_url.original_url,
-						'short_url': short_url.short_url
-					});
-				}
+			console.log(urls);
+			res.json({
+				'originalUrl': urls.originalUrl,
+				'shortUrl': urls.shortUrl
 			});
-
-			db.close();
 		}
 	});
 });
 
 app.get('/:token', function(req, res) {
-	mongo.connect(uri, function(err, db) {
+	urlCollection.findOne({
+		shortUrl: req.headers.host + '/' + req.params.token
+	}).exec(function(err, urls) {
 		if (err) {
-			console.log('Unable to connect to Database');
+			res.status(500).send('Error');
 		} else {
-			var urls = db.collection('urls');
+			console.log(urls);
 
-			urls.findOne({
-				short_url: req.headers.host + '/' + req.params.token
-			}, {
-				_id: 0,
-				original_url: 1,
-				short_url: 1
-			}, function(err, data) {
-				if (url.parse(data.original_url).protocol === null) {
-					data.original_url = 'http://' + data.original_url;
-				}
+			if (url.parse(urls.originalUrl).protocol === null) {
+				urls.originalUrl = 'http://' + urls.originalUrl;
+			}
 
-				res.redirect(data.original_url);
-			});
-
-			db.close();
+			res.redirect(urls.originalUrl);
 		}
 	});
 });

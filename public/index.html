@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>URL Shortener</title>
+	<style type="text/css">
+	body {
+		font-family: "Courier New", Courier, monospace;
+		padding: 4% 7%;
+	}
+	h1 {
+		text-align: center;
+		color: #4A148C;
+	}
+	h2 {
+		color: #4A148C;
+	}
+	code {
+		color: #4A148C;
+		font-size: 130%
+	}
+	</style>
+</head>
+<body>
+<h1>URL Shortener Microservice</h1><hr size="5" color="#EF5350">
+<h2>baseUrl => https://url-shortener-free.herokuapp.com</h2>
+<div>
+	<h3 style="color: #EF5350">Example Usage</h3>
+	<code><b>
+		baseUrl/shorten?url=github.com
+	</b></code><br>
+	<code><b>
+		baseUrl/shorten?url=https://github.com
+	</b></code>
+	<br>
+	<br>
+	<h3 style="color: #EF5350">Example Response</h3>
+	<code>
+		{"originalUrl":"https://github.com","shortUrl":"baseUrl/rJ9PAWlPg"}
+	</code>
+	<h3>-> Open Short URL in New Tab</h3>
+</div>
+</body>
+</html>
