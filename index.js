@@ -33,7 +33,7 @@ app.get('/shorten', function(req, res) {
 		if (err) {
 			res.status(500).send('Error');
 		} else {
-			console.log(urls);
+			console.log('Response :', urls);
 			res.json({
 				'originalUrl': urls.originalUrl,
 				'shortUrl': urls.shortUrl
@@ -49,13 +49,15 @@ app.get('/:token', function(req, res) {
 		if (err) {
 			res.status(500).send('Error');
 		} else {
-			console.log(urls);
+			console.log('Redirect :', urls);
 
-			if (url.parse(urls.originalUrl).protocol === null) {
-				urls.originalUrl = 'http://' + urls.originalUrl;
+			if (urls) {
+				if (url.parse(urls.originalUrl).protocol === null) {
+					urls.originalUrl = 'http://' + urls.originalUrl;
+				}
+
+				res.redirect(urls.originalUrl);
 			}
-
-			res.redirect(urls.originalUrl);
 		}
 	});
 });
